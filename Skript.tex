@@ -1,0 +1,49 @@
+\documentclass[10pt,twoside,openright]{memoir}
+\usepackage[paperwidth=4.25in, paperheight=6.875in,bindingoffset=.75in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{tgtermes}
+
+\usepackage[protrusion=true,expansion=true]{microtype}
+
+\makeatletter
+\def\maketitle{%
+  \null
+  \thispagestyle{empty}%
+  \vfill
+  \begin{center}\leavevmode
+    \normalfont
+    {\LARGE\raggedleft \@author\par}%
+    \hrulefill\par
+    {\huge\raggedright \@title\par}%
+    \vskip 1cm
+  \end{center}%
+  \vfill
+  \null
+  \cleardoublepage
+  }
+\makeatother
+\author{NAME OF AUTHOR}
+\title{Definitionen Kategorientheorie}
+\date{}
+
+
+\begin{document}
+
+\let\cleardoublepage\clearpage
+
+
+\maketitle
+
+\frontmatter
+
+\null\vfill
+
+\mainmatter
+\sloppy
+
+\chapter{Kategorien}
+\section{Definition}
+
+\end{document}
