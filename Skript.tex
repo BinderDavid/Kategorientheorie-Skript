@@ -1,11 +1,18 @@
 \documentclass[10pt,twoside,openright]{memoir}
-\usepackage[paperwidth=4.25in, paperheight=6.875in,bindingoffset=.75in]{geometry}
+\usepackage[paperwidth=210mm, paperheight=297mm,bindingoffset=.75in]{geometry}
 \usepackage[T1]{fontenc}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel}
 \usepackage{tgtermes}
-
 \usepackage[protrusion=true,expansion=true]{microtype}
+\usepackage{enumitem}
+
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{kommentar}{Kommentar}
+\newtheorem{beispiel}{Beispiel}
+\newtheorem{theorem}{Theorem}
 
 \makeatletter
 \def\maketitle{%
@@ -24,26 +31,133 @@
   \cleardoublepage
   }
 \makeatother
-\author{NAME OF AUTHOR}
+\author{David Binder\\ Ingo Skupin}
 \title{Definitionen Kategorientheorie}
 \date{}
 
+\newcommand{\C}{\ensuremath{\mathcal{C}}}
+\newcommand{\Obj}[1]{\ensuremath{\mathtext{Obj}(#1)}}
+\newcommand{\Hom}[3]{\ensuremath{\mathtext{Hom}_{#1}(#2, #3)}}
+\newcommand{\id}[1]{\ensuremath{\mathtext{id}_{#1}}}
+\newcommand{\Set}{\ensuremath{\mathbf{Set}}}
+\newcommand{\Hask}{\ensuremath{\mathbf{Hask}}}
+\newcommand{\Op}[1]{\ensuremath{#1^{\mathbf{op}}}}
 
+\setenumerate{itemsep=1.5pt}
 \begin{document}
 
 \let\cleardoublepage\clearpage
-
 
 \maketitle
 
 \frontmatter
 
-\null\vfill
+\tableofcontents
 
 \mainmatter
-\sloppy
 
 \chapter{Kategorien}
-\section{Definition}
+
+\section{Kategorien und Beispiele}
+
+\begin{definition}[Kategorie]
+  Eine Kategorie $\C$ besteht aus:
+  \begin{enumerate}
+  \item Den Objekten der Kategorie $\Obj{\C}$.
+  \item Für je zwei Objekte $A, B \in \Obj{C}$ aus der Kategorie, der Menge der Morphismen von $A$ nach $B$, geschrieben als $\Hom{\C}{A}{B}$.
+  \item Für jedes Objekt $A \in \Obj{C}$ den Identitätsmorphismus $\id{A} \in \Hom{C}{A}{A}$.
+  \item Für zwei \enquote{zusammenpassende} Morphismen $f \in \Hom{\C}{B}{C}$ und $g \in \Hom{\C}{A}{B}$ existiert die Hintereinanderausführung $f \circ g \in \Hom{\C}{A}{C}$.
+  \end{enumerate}
+  Zusätzlich müssen folgende drei Eigenschaften gelten:
+  \begin{enumerate}
+  \item Die Hintereinanderausführung von Morphismen ist assoziativ: Für $f \in \Hom{\C}{C}{D}, g \in \Hom{\C}{B}{C}, h \in \Hom{\C}{A}{B}$ gilt $(f \circ g) \circ h = f \circ (g \circ h)$.
+  \item Der Identitätsmorphismus ist ein rechtes Neutralelement bezüglich Hintereinanderausführung: Für alle $f \in \Hom{\C}{A}{B}$ gilt $f \circ \id{A} = f$.
+  \item Der Identitätsmorphismus ist ein linkes Neutralelement bezüglich Hintereinanderausführung: Für alle $f \in \Hom{\C}{B}{A}$ gilt $\id{A} \circ f = f$.
+  \end{enumerate}
+\end{definition}
+
+\begin{beispiel}[\Set]
+  Die Kategorie \Set\ besteht aus allen Mengen als Objekten, und hat alle normalen (mengentheoretischen) Funktionen als Morphismen.
+\end{beispiel}
+
+\begin{beispiel}[\Hask]
+  Die Kategorie \Hask\ besteht aus den Haskell Typen als Objekten, und Haskell Funktionen als Morphismen.
+\end{beispiel}
+
+\begin{definition}[Monoid]
+  Ein Monoid, geschrieben als Tripel $(A,\cdot, e)$, besteht aus
+  \begin{enumerate}
+  \item Der Trägermenge $A$
+  \item Einer binären Operation $\cdot : A \to A \to A$.
+  \item Einem Neutralelement $e$, i.e. $a \cdot e = a = e \cdot a$ für alle $a \in A$.
+  \end{enumerate}
+\end{definition}
+\begin{beispiel}[Monoid als Kategorie]
+  Eine Kategorie mit exakt einem Objekt enthält exakt die gleiche Information wie ein Monoid.
+\end{beispiel}  
+
+\begin{definition}[Partielle Ordnung]
+  Eine Relation $\leq$ auf einer Menge $A$ ist eine partielle Ordnung wenn für alle $a,b,c \in A$ gilt:
+  \begin{enumerate}
+  \item $\leq$ ist reflexiv, i.e. $a \leq a$.
+  \item $\leq$ ist transitiv, i.e. $a \leq b$ und $b \leq c$ impliziert $a \leq c$.
+  \item $\leq$ ist antisymmetrisch, i.e. $a \leq b$ und $b \leq a$ impliziert $a = b$.
+  \end{enumerate}
+\end{definition}
+
+\begin{beispiel}[Partielle Ordnung als Kategorie]
+  Eine Kategorie $\C$ in der für je zwei Objekte $A, B \in \Obj{\C}$ die Menge \Hom{\C}{A}{B} entweder 0 oder 1 Element enthält, enthält exakt die gleiche Information wie eine partielle Ordnung.
+\end{beispiel}
+
+\begin{definition}[Duale Kategorie]
+  Die duale Kategorie \Op{\C}\ zu einer Kategorie \C\ erhält man, indem man die Richtung aller Morphismen umdreht.
+\end{definition}
+
+\section{Isomorphismen, initiale und terminale Objekte}
+
+\begin{definition}[Initiales Objekt]
+  Ein Objekt $A$ in einer Kategorie \C\ ist ein initiales Objekt, falls für jedes andere Objekt $B$ exakt ein Morphismus in \Hom{\C}{A}{B}\ existiert.
+\end{definition}
+
+\begin{definition}[Terminales Objekt]
+  Ein Objekt $A$ in einer Kategorie \C\ ist ein terminales Objekt, falls für jedes andere Objekt $B$ exakt ein Morphismus in \Hom{\C}{B}{A}\ existiert.
+\end{definition}
+
+\begin{beispiel}[Initiales und terminales Objekt in \Set]
+  Die leere Menge ist das (einzige) initiale Objekt in \Set.
+  Jede ein-elementige Menge ist ein terminales Objekt in \Set.
+\end{beispiel}
+
+\begin{beispiel}[Initiales und terminales Objekt in \Hask]
+  \texttt{Void} ist das initiale Objekt in \Hask. Unit, geschrieben $()$, ist das terminale Objekt in \Hask.
+\end{beispiel}
+
+\begin{beispiel}[Dualität von initialem und terminalem Objekt]
+  Jedes initiale Objekt in einer Kategorie \C\ ist ein terminales Objekt in der dualen Kategorie \Op{\C}, und vice versa.
+\end{beispiel}
+  
+\begin{definition}[Isomorphismus]
+  Ein Morphismus $f \in \Hom{\C}{A}{B}$ ist ein Isomorphismus, falls ein Morphismus $f^{-1} \in \Hom{\C}{B}{A}$ existiert, sodass $f \circ f^{-1} = \id{B}$ und $f^{-1} \circ f = \id{A}$ gilt.
+\end{definition}
+
+Der folgende Beweis für die Eindeutigkeit bis auf eindeutigen Morphismus für initale Objekte kann als Blaupause für strukturell fast identische Beweise für terminale Objekte, Produkte, Koprodukte, uvm.\ verwendet werden.
+
+\begin{theorem}
+  Wenn eine Kategorie \C\ ein initiales Objekt enthält, dann ist das initiale Objekt bis auf eindeutigen Isomorphismus eindeutig bestimmt.
+\end{theorem}
+\begin{proof}
+  Seien $A$ und $B$ beides initiale Objekte in der Kategorie \C. Wir müssen zeigen dass \emph{exakt ein} Isomorphismus zwischen $A$ und $B$ existiert.
+  \begin{itemize}
+  \item Aus der Annahme dass $A$ ein initiales Objekt ist folgt, dass (exakt) ein Morphismus $f$ von $A$ nach $B$ existiert.
+  \item Aus der Annahme dass $B$ ein initiales Objekt ist folgt, dass (exakt) ein Morphismus $g$ von $B$ nach $A$ existiert.
+  \item Wir müssen zeigen dass $g \circ f \in \Hom{\C}{A}{A}$ der gleiche Morphismus wie \id{A}\ ist. Aus der Annahme dass $A$ ein initiales Objekt ist folgt aber schon, dass exakt ein Morphismus von $A$ nach $A$ existiert, \id{A}, also gilt $g \circ f = \id{A}$.
+  \item Analog für $f \circ g$.
+  \end{itemize}
+  Damit sind $f$ und $g$ die eindeutigen Isomorphismen zwischen $A$ und $B$.
+\end{proof}
+
+\section{Produkte und Koprodukte}
+\section{Funktoren}
 
 \end{document}
+
